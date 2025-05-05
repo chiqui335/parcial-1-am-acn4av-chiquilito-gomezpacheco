@@ -5,46 +5,47 @@
     android:layout_height="match_parent"
     android:background="@drawable/inicio">
 
-
     <ImageView
         android:id="@+id/imgLogo"
         android:layout_width="349dp"
         android:layout_height="340dp"
         android:layout_marginTop="100dp"
         android:src="@drawable/logo"
-        app:layout_constraintBottom_toTopOf="@id/txtTitulo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/txtTitulo"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
         android:layout_marginTop="32dp"
-        android:fontFamily="sans-serif-medium"
-        android:shadowColor="#80000000"
-        android:shadowDx="2"
-        android:shadowDy="2"
-        android:shadowRadius="4"
-        android:text="SafeKey"
-        android:textColor="#ffb84d"
-        android:textSize="40sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imgLogo"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imgLogo" />
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <Button
-        android:id="@+id/btnIngresar"
-        android:layout_width="127dp"
-        android:layout_height="63dp"
-        android:layout_marginTop="60dp"
-        android:text="INGRESAR"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txtTitulo"
-        />
+        <TextView
+            android:id="@+id/txtTitulo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:shadowColor="#80000000"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="4"
+            android:text="SafeKey"
+            android:textColor="#ffb84d"
+            android:textSize="40sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnIngresar"
+            android:layout_width="127dp"
+            android:layout_height="63dp"
+            android:layout_marginTop="60dp"
+            android:text="INGRESAR" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
