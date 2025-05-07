@@ -18,7 +18,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- TextView para la contraseña (se mantiene igual) -->
+    <!-- TextView para la contraseña -->
     <TextView
         android:id="@+id/txtPassword"
         android:layout_width="0dp"
@@ -34,29 +34,94 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imgLogo" />
 
+    <!-- Contenedor para el selector de longitud -->
+    <LinearLayout
+        android:id="@+id/longitudContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="24dp"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txtPassword">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Longitud de la contraseña:"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"/>
+
+        <SeekBar
+            android:id="@+id/seekBarLongitud"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:max="12"
+            android:progress="4"/>
+
+        <TextView
+            android:id="@+id/txtLongitud"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="12 caracteres"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"/>
+    </LinearLayout>
+
+    <!-- Botón para caracteres especiales -->
+    <Button
+        android:id="@+id/btnToggleEspeciales"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Activar/Desactivar especiales"
+        android:textColor="#FFFFFF"
+        app:layout_constraintTop_toBottomOf="@id/longitudContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"/>
+
+    <!-- Botón GENERAR -->
+    <Button
+        android:id="@+id/btnGenerar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="GENERAR"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/btnToggleEspeciales"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"/>
+
+    <!-- Contenedor para COPIAR y CANCELAR -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        app:layout_constraintTop_toBottomOf="@id/txtPassword"
+        android:orientation="horizontal"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/btnGenerar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="60dp">
-
-        <Button
-            android:id="@+id/btnGenerar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="GENERAR"
-            android:textStyle="bold" />
+        android:layout_marginTop="40dp"
+        android:padding="8dp">
 
         <Button
             android:id="@+id/btnCopiar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:text="COPIAR" />
+            android:text="COPIAR"
+            android:layout_marginEnd="24dp"/>
+
+        <Button
+            android:id="@+id/btnCancelar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CANCELAR"
+            android:backgroundTint="#F44336"
+            android:textColor="#FFFFFF"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
