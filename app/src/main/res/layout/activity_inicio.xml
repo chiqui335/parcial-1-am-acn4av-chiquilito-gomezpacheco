@@ -43,9 +43,12 @@
         <Button
             android:id="@+id/btnIngresar"
             android:layout_width="127dp"
-            android:layout_height="63dp"
+            android:layout_height="50dp"
             android:layout_marginTop="60dp"
-            android:text="INGRESAR" />
+            android:text="INGRESAR"
+            android:textStyle="bold"
+            android:textColor="#0a3f60"
+            android:backgroundTint="#ffb84d"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,6 +3,7 @@ package com.example.parcial_1_am_acn4av_chiquilito_gomezpacheco;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
     Button btnGenerar;
     Button btnCopiar;
     Button btnCancelar;
-    Button btnToggleEspeciales;
+    CheckBox checkEspeciales;
     SeekBar seekBarLongitud;
     TextView txtLongitud;
     private int longitudPassword = 12;
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         btnGenerar = findViewById(R.id.btnGenerar);
         btnCopiar = findViewById(R.id.btnCopiar);
         btnCancelar = findViewById(R.id.btnCancelar);
-        btnToggleEspeciales = findViewById(R.id.btnToggleEspeciales);
+        checkEspeciales = findViewById(R.id.checkEspeciales);
         seekBarLongitud = findViewById(R.id.seekBarLongitud);
         txtLongitud = findViewById(R.id.txtLongitud);
 
@@ -41,21 +42,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 longitudPassword = 8 + progress; // Rango 8-20 (8 + 0 a 8 + 12)
-                txtLongitud.setText(longitudPassword + " caracteres");
+                txtLongitud.setText(longitudPassword + "caracteres");
             }
 
             @Override public void onStartTrackingTouch(SeekBar seekBar) {}
             @Override public void onStopTrackingTouch(SeekBar seekBar) {}
-        });
-
-        // Botón de caracteres especiales
-        btnToggleEspeciales.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                usarCaracteresEspeciales = !usarCaracteresEspeciales;
-                btnToggleEspeciales.setText(usarCaracteresEspeciales ?
-                        "Desactivar especiales" : "Activar especiales");
-            }
         });
 
         // Generar contraseña
@@ -95,10 +86,17 @@ public class MainActivity extends AppCompatActivity {
 
     private String generarContrasenaSegura(int longitud) {
         String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        if(usarCaracteresEspeciales) {
+
+        // Verificar si el CheckBox está marcado
+        CheckBox checkEspeciales = findViewById(R.id.checkEspeciales);
+        boolean usarCaracteresEspeciales = checkEspeciales.isChecked(); // obtener el estado del CheckBox
+
+        // Agregar caracteres especiales si está tildado
+        if (usarCaracteresEspeciales) {
             chars += "!@#$%^&*";
         }
 
+        // Generación de la contraseña
         SecureRandom random = new SecureRandom();
         StringBuilder sb = new StringBuilder();
 
@@ -106,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
             int index = random.nextInt(chars.length());
             sb.append(chars.charAt(index));
         }
-
         return sb.toString();
     }
+
 }
