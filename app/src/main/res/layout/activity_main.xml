@@ -35,6 +35,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imgLogo" />
 
+
     <LinearLayout
         android:id="@+id/longitudContainer"
         android:layout_width="0dp"
@@ -46,6 +47,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/txtPassword">
+
+        <EditText
+            android:id="@+id/etNombreClave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nombre de la contraseña"
+            android:inputType="textPersonName"
+            android:padding="10dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@android:color/darker_gray"
+
+            />
+
 
         <TextView
             android:layout_width="wrap_content"
@@ -105,6 +120,7 @@
 
     <!-- Contenedor para COPIAR y CANCELAR -->
     <LinearLayout
+        android:id="@+id/ButtonsMain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -125,6 +141,15 @@
             android:layout_marginEnd="24dp"/>
 
         <Button
+            android:id="@+id/btnGuardar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="GUARDAR"
+            android:backgroundTint="@android:color/holo_blue_light"
+            android:textColor="@android:color/white"
+            android:layout_marginEnd="24dp" />
+
+        <Button
             android:id="@+id/btnCancelar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -132,5 +157,30 @@
             android:backgroundTint="#C4253A"
             android:textColor="#FFFFFF"/>
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/ButtonsMain"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="40dp"
+        android:padding="8dp">
+
+        <Button
+            android:id="@+id/btnVerClaves"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="VER CONTRASEÑAS"
+            android:textStyle="bold"
+            android:textColor="#0a3f60"
+            android:backgroundTint="#ffb84d"
+            android:layout_marginTop="4dp" />
+
+
+    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

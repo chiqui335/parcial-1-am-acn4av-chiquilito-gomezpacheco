@@ -12,20 +12,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Parcial1amacn4avchiquilitogomezpacheco"
         tools:targetApi="31">
-
+        <activity
+            android:name=".VerClaves"
+            android:exported="false" />
         <!-- Declaración de la actividad de inicio -->
-        <activity android:name=".InicioActivity"
+        <activity
+            android:name=".InicioActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!-- Declaración de la actividad principal -->
-        <activity android:name=".MainActivity">
-        </activity>
-
+        </activity> <!-- Declaración de la actividad principal -->
+        <activity android:name=".MainActivity"></activity>
     </application>
 
 </manifest>
