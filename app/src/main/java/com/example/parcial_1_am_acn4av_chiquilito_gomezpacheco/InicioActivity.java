@@ -83,8 +83,7 @@ public class InicioActivity extends AppCompatActivity {
         //     btnRegister.setOnClickListener(new View.OnClickListener() {
         //         @Override
         //         public void onClick(View v) {
-        //             // Aquí puedes llamar a createAccount(email, password) o abrir una nueva actividad de registro
-        //             // Por simplicidad para el login, no lo incluyo directamente aquí, pero es una opción.
+        //             // llamar a createAccount(email, password) o abrir una nueva actividad de registro
         //             // createAccount(editTextEmail.getText().toString().trim(), editTextPassword.getText().toString().trim());
         //         }
         //     });
@@ -119,7 +118,7 @@ public class InicioActivity extends AppCompatActivity {
                             // Opcional: Finaliza esta actividad para que el usuario no pueda volver al login con el botón "atrás"
                             finish();
                         } else {
-                            // Si el inicio de sesión falla (ej. credenciales incorrectas, sin conexión)
+                            // Si el inicio de sesión falla (credenciales incorrectas, sin conexión)
                             Log.w("Firebase", "signInWithEmail:failure", task.getException()); // Mensaje de error para Logcat
 
                             String errorMessage = "Error de autenticación.";
@@ -132,7 +131,7 @@ public class InicioActivity extends AppCompatActivity {
                             textViewMessage.setText(errorMessage);
 
                             textViewMessage.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
-                            textViewMessage.setVisibility(View.VISIBLE); // Asegúrate de que el TextView esté visible
+                            textViewMessage.setVisibility(View.VISIBLE);
                         }
                     }
                 });
@@ -172,11 +171,11 @@ public class InicioActivity extends AppCompatActivity {
     }
 
     // 9. Método para verificar si el usuario ya está logueado cuando la actividad se inicia
-    // Esto es importante para que el usuario no tenga que loguearse cada vez si ya lo hizo.
+
     @Override
     public void onStart() {
         super.onStart();
-        // Obtiene el usuario actualmente logueado. Será null si nadie ha iniciado sesión.
+        // Obtiene el usuario actualmente logueado. Va a ser null si nadie inició sesión.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
 
