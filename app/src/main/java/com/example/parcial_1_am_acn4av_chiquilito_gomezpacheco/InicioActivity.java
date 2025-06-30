@@ -21,13 +21,15 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class InicioActivity extends AppCompatActivity {
 
-    // 1. Declarar variables para los elementos de UI (EditTexts, Button, TextView)
+    //
+    //
+    // Declarar variables para los elementos de UI (EditTexts, Button, TextView)
     private EditText editTextEmail;
     private EditText editTextPassword;
     private Button btnIngresar;
     private TextView textViewMessage; // Para mostrar mensajes de error/éxito al usuario
 
-    // 2. Declarar la instancia de FirebaseAuth (el objeto principal para autenticación)
+   //Declarar la instancia de FirebaseAuth)
     private FirebaseAuth mAuth;
 
     @Override
@@ -35,19 +37,16 @@ public class InicioActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inicio);
 
-        // 3. Inicializar la instancia de FirebaseAuth
-        // Esto se hace una vez por actividad y te da el punto de entrada a los servicios de Auth.
+        // Inicializar la instancia de FirebaseAuth
         mAuth = FirebaseAuth.getInstance();
 
-        // 4. Conectar las variables declaradas con los elementos del layout
-        // Asegúrate de que las IDs (R.id....) coincidan con las que pusiste en tu activity_inicio.xml
+        // Conectar las variables declaradas con los elementos del layout
         editTextEmail = findViewById(R.id.editTextEmail);
         editTextPassword = findViewById(R.id.editTextPassword);
         btnIngresar = findViewById(R.id.btnIngresar);
         textViewMessage = findViewById(R.id.textViewMessage);
 
-        // 5. Configurar el Listener para el botón "INGRESAR"
-        // Ahora, cuando se haga clic, no solo navegará, sino que intentará loguear al usuario
+        // Ahora, cuando se haga clic, intentará loguear al usuario
         btnIngresar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,31 +54,30 @@ public class InicioActivity extends AppCompatActivity {
                 String email = editTextEmail.getText().toString().trim(); // .trim() quita espacios en blanco al inicio/final
                 String password = editTextPassword.getText().toString().trim();
 
-                // 6. Validaciones básicas de los campos antes de intentar el login
+                // Validaciones básicas de los campos antes de intentar el login
                 if (email.isEmpty()) {
                     editTextEmail.setError("El email es requerido");
-                    editTextEmail.requestFocus(); // Pone el foco en el campo para que el usuario lo vea
-                    return; // Detiene la ejecución si hay un error
+                    editTextEmail.requestFocus();
+                    return;
                 }
                 if (password.isEmpty()) {
                     editTextPassword.setError("La contraseña es requerida");
                     editTextPassword.requestFocus();
                     return;
                 }
-                // Firebase Auth requiere contraseñas de al menos 6 caracteres
+                //verificar pass largo
                 if (password.length() < 6) {
                     editTextPassword.setError("La contraseña debe tener al menos 6 caracteres");
                     editTextPassword.requestFocus();
                     return;
                 }
 
-                // 7. Si las validaciones son correctas, llamar al método para iniciar sesión con Firebase
+                // llamar al método para iniciar sesión con Firebase
                 signInUser(email, password);
             }
         });
 
-        // Opcional: Si quieres un botón separado para registrarse (no solo para login)
-        // Puedes agregar un botón con ID R.id.btnRegister en tu XML y habilitar esta parte
+        // Botón separado para registrarse (no solo para login) (habilitar después)
         // Button btnRegister = findViewById(R.id.btnRegister);
         // if (btnRegister != null) {
         //     btnRegister.setOnClickListener(new View.OnClickListener() {
@@ -93,7 +91,7 @@ public class InicioActivity extends AppCompatActivity {
         // }
     }
 
-    // 8. Método principal para la lógica de inicio de sesión con Firebase Authentication
+    // Método principal para inicio de sesión con Firebase
     private void signInUser(String email, String password) {
         // Muestra un mensaje temporal mientras se procesa la solicitud
         Toast.makeText(InicioActivity.this, "Iniciando sesión...", Toast.LENGTH_SHORT).show();
@@ -126,13 +124,13 @@ public class InicioActivity extends AppCompatActivity {
 
                             String errorMessage = "Error de autenticación.";
                             if (task.getException() != null) {
-                                // Puedes obtener un mensaje de error más específico de la excepción
+
                                 errorMessage += " " + task.getException().getMessage();
                             }
                             Toast.makeText(InicioActivity.this, errorMessage,
                                     Toast.LENGTH_LONG).show();
                             textViewMessage.setText(errorMessage);
-                            // Establece el color del texto a rojo
+
                             textViewMessage.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
                             textViewMessage.setVisibility(View.VISIBLE); // Asegúrate de que el TextView esté visible
                         }
@@ -141,7 +139,6 @@ public class InicioActivity extends AppCompatActivity {
     }
 
     // Opcional: Método para crear una nueva cuenta (si necesitas un flujo de registro aquí mismo)
-    // Normalmente, esto estaría en una Activity de registro separada.
     private void createAccount(String email, String password) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -156,8 +153,8 @@ public class InicioActivity extends AppCompatActivity {
                             textViewMessage.setText("Cuenta creada exitosamente.");
                             textViewMessage.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
 
-                            // Opcional: Puedes redirigir al usuario o loguearlo automáticamente
-                            // signInUser(email, password); // Esto lo loguearía automáticamente
+                            // Opcional: redirigir al usuario o loguearlo automáticamente
+
                         } else {
                             // Si falla la creación de la cuenta
                             Log.w("Firebase", "createUserWithEmail:failure", task.getException());
@@ -182,11 +179,11 @@ public class InicioActivity extends AppCompatActivity {
         // Obtiene el usuario actualmente logueado. Será null si nadie ha iniciado sesión.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
-            // Si hay un usuario logueado, redirige directamente a la pantalla principal
+
             Log.d("Firebase", "Usuario ya logueado: " + currentUser.getEmail());
             Intent intent = new Intent(InicioActivity.this, MainActivity.class);
             startActivity(intent);
-            finish(); // Finaliza la actividad de login para que no se pueda volver
+            finish();
         }
     }
 }
