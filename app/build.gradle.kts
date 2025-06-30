@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
 }
 
+apply(plugin = "com.google.gms.google-services")
+
 android {
     namespace = "com.example.parcial_1_am_acn4av_chiquilito_gomezpacheco"
     compileSdk = 35
@@ -32,7 +34,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
@@ -41,5 +42,5 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation("com.google.code.gson:gson:2.10.1")
-
+    implementation("com.google.firebase:firebase-auth:22.3.0")
 }

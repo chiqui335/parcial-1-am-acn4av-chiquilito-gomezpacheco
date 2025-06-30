@@ -2,23 +2,191 @@ package com.example.parcial_1_am_acn4av_chiquilito_gomezpacheco;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log; // Para ver mensajes en Logcat
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText; // ¡IMPORTANTE: Nueva importación!
+import android.widget.TextView; // ¡IMPORTANTE: Nueva importación!
+import android.widget.Toast; // Para mostrar mensajes emergentes al usuario
+
+import androidx.annotation.NonNull; // Para anotaciones de no nulidad
 import androidx.appcompat.app.AppCompatActivity;
 
+// ¡IMPORTANTE: Nuevas importaciones de Firebase!
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class InicioActivity extends AppCompatActivity {
+
+    // 1. Declarar variables para los elementos de UI (EditTexts, Button, TextView)
+    private EditText editTextEmail;
+    private EditText editTextPassword;
+    private Button btnIngresar;
+    private TextView textViewMessage; // Para mostrar mensajes de error/éxito al usuario
+
+    // 2. Declarar la instancia de FirebaseAuth (el objeto principal para autenticación)
+    private FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inicio);
 
-        Button btnIngresar = findViewById(R.id.btnIngresar);
+        // 3. Inicializar la instancia de FirebaseAuth
+        // Esto se hace una vez por actividad y te da el punto de entrada a los servicios de Auth.
+        mAuth = FirebaseAuth.getInstance();
+
+        // 4. Conectar las variables declaradas con los elementos del layout
+        // Asegúrate de que las IDs (R.id....) coincidan con las que pusiste en tu activity_inicio.xml
+        editTextEmail = findViewById(R.id.editTextEmail);
+        editTextPassword = findViewById(R.id.editTextPassword);
+        btnIngresar = findViewById(R.id.btnIngresar);
+        textViewMessage = findViewById(R.id.textViewMessage);
+
+        // 5. Configurar el Listener para el botón "INGRESAR"
+        // Ahora, cuando se haga clic, no solo navegará, sino que intentará loguear al usuario
         btnIngresar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(InicioActivity.this, MainActivity.class);
-                startActivity(intent);
+                // Obtener el texto que el usuario ingresó en los campos
+                String email = editTextEmail.getText().toString().trim(); // .trim() quita espacios en blanco al inicio/final
+                String password = editTextPassword.getText().toString().trim();
+
+                // 6. Validaciones básicas de los campos antes de intentar el login
+                if (email.isEmpty()) {
+                    editTextEmail.setError("El email es requerido");
+                    editTextEmail.requestFocus(); // Pone el foco en el campo para que el usuario lo vea
+                    return; // Detiene la ejecución si hay un error
+                }
+                if (password.isEmpty()) {
+                    editTextPassword.setError("La contraseña es requerida");
+                    editTextPassword.requestFocus();
+                    return;
+                }
+                // Firebase Auth requiere contraseñas de al menos 6 caracteres
+                if (password.length() < 6) {
+                    editTextPassword.setError("La contraseña debe tener al menos 6 caracteres");
+                    editTextPassword.requestFocus();
+                    return;
+                }
+
+                // 7. Si las validaciones son correctas, llamar al método para iniciar sesión con Firebase
+                signInUser(email, password);
             }
         });
+
+        // Opcional: Si quieres un botón separado para registrarse (no solo para login)
+        // Puedes agregar un botón con ID R.id.btnRegister en tu XML y habilitar esta parte
+        // Button btnRegister = findViewById(R.id.btnRegister);
+        // if (btnRegister != null) {
+        //     btnRegister.setOnClickListener(new View.OnClickListener() {
+        //         @Override
+        //         public void onClick(View v) {
+        //             // Aquí puedes llamar a createAccount(email, password) o abrir una nueva actividad de registro
+        //             // Por simplicidad para el login, no lo incluyo directamente aquí, pero es una opción.
+        //             // createAccount(editTextEmail.getText().toString().trim(), editTextPassword.getText().toString().trim());
+        //         }
+        //     });
+        // }
+    }
+
+    // 8. Método principal para la lógica de inicio de sesión con Firebase Authentication
+    private void signInUser(String email, String password) {
+        // Muestra un mensaje temporal mientras se procesa la solicitud
+        Toast.makeText(InicioActivity.this, "Iniciando sesión...", Toast.LENGTH_SHORT).show();
+        textViewMessage.setText("Iniciando sesión...");
+        textViewMessage.setVisibility(View.VISIBLE); // Asegúrate de que el TextView esté visible
+
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Si el inicio de sesión es exitoso
+                            Log.d("Firebase", "signInWithEmail:success"); // Mensaje para Logcat
+                            FirebaseUser user = mAuth.getCurrentUser(); // Obtiene el usuario actual logueado
+
+                            Toast.makeText(InicioActivity.this, "¡Bienvenido, " + user.getEmail() + "!",
+                                    Toast.LENGTH_LONG).show(); // Muestra un mensaje al usuario
+                            textViewMessage.setText("Inicio de sesión exitoso.");
+                            // Establece el color del texto a verde (puedes definir este color en colors.xml)
+                            textViewMessage.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
+
+                            // Navegar a la MainActivity (o a la pantalla principal de tu generador de contraseñas)
+                            Intent intent = new Intent(InicioActivity.this, MainActivity.class);
+                            startActivity(intent);
+                            // Opcional: Finaliza esta actividad para que el usuario no pueda volver al login con el botón "atrás"
+                            finish();
+                        } else {
+                            // Si el inicio de sesión falla (ej. credenciales incorrectas, sin conexión)
+                            Log.w("Firebase", "signInWithEmail:failure", task.getException()); // Mensaje de error para Logcat
+
+                            String errorMessage = "Error de autenticación.";
+                            if (task.getException() != null) {
+                                // Puedes obtener un mensaje de error más específico de la excepción
+                                errorMessage += " " + task.getException().getMessage();
+                            }
+                            Toast.makeText(InicioActivity.this, errorMessage,
+                                    Toast.LENGTH_LONG).show();
+                            textViewMessage.setText(errorMessage);
+                            // Establece el color del texto a rojo
+                            textViewMessage.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+                            textViewMessage.setVisibility(View.VISIBLE); // Asegúrate de que el TextView esté visible
+                        }
+                    }
+                });
+    }
+
+    // Opcional: Método para crear una nueva cuenta (si necesitas un flujo de registro aquí mismo)
+    // Normalmente, esto estaría en una Activity de registro separada.
+    private void createAccount(String email, String password) {
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // La cuenta se creó exitosamente
+                            Log.d("Firebase", "createUserWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            Toast.makeText(InicioActivity.this, "Cuenta creada exitosamente para " + user.getEmail(),
+                                    Toast.LENGTH_LONG).show();
+                            textViewMessage.setText("Cuenta creada exitosamente.");
+                            textViewMessage.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
+
+                            // Opcional: Puedes redirigir al usuario o loguearlo automáticamente
+                            // signInUser(email, password); // Esto lo loguearía automáticamente
+                        } else {
+                            // Si falla la creación de la cuenta
+                            Log.w("Firebase", "createUserWithEmail:failure", task.getException());
+                            String errorMessage = "Fallo al crear cuenta.";
+                            if (task.getException() != null) {
+                                errorMessage += " " + task.getException().getMessage();
+                            }
+                            Toast.makeText(InicioActivity.this, errorMessage,
+                                    Toast.LENGTH_LONG).show();
+                            textViewMessage.setText(errorMessage);
+                            textViewMessage.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+                        }
+                    }
+                });
+    }
+
+    // 9. Método para verificar si el usuario ya está logueado cuando la actividad se inicia
+    // Esto es importante para que el usuario no tenga que loguearse cada vez si ya lo hizo.
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Obtiene el usuario actualmente logueado. Será null si nadie ha iniciado sesión.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null){
+            // Si hay un usuario logueado, redirige directamente a la pantalla principal
+            Log.d("Firebase", "Usuario ya logueado: " + currentUser.getEmail());
+            Intent intent = new Intent(InicioActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish(); // Finaliza la actividad de login para que no se pueda volver
+        }
     }
 }
