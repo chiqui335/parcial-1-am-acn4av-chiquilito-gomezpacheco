@@ -46,7 +46,7 @@ public class InicioActivity extends AppCompatActivity {
         btnIngresar = findViewById(R.id.btnIngresar);
         textViewMessage = findViewById(R.id.textViewMessage);
 
-        // Ahora, cuando se haga clic, intentará loguear al usuario
+        // Ahora cuando se hace clic, intenta loguear al usuario
         btnIngresar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,10 +93,10 @@ public class InicioActivity extends AppCompatActivity {
 
     // Método principal para inicio de sesión con Firebase
     private void signInUser(String email, String password) {
-        // Muestra un mensaje temporal mientras se procesa la solicitud
+        // mensaje temporal mientras se procesa la solicitud
         Toast.makeText(InicioActivity.this, "Iniciando sesión...", Toast.LENGTH_SHORT).show();
         textViewMessage.setText("Iniciando sesión...");
-        textViewMessage.setVisibility(View.VISIBLE); // Asegúrate de que el TextView esté visible
+        textViewMessage.setVisibility(View.VISIBLE);
 
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
