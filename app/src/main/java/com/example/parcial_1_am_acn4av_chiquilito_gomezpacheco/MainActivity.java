@@ -163,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
     private String generarContrasenaSegura(int longitud) {
         String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         boolean usarCaracteresEspeciales = checkEspeciales.isChecked();

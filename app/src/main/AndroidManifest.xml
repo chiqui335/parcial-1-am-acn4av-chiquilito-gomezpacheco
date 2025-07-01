@@ -13,9 +13,11 @@
         android:theme="@style/Theme.Parcial1amacn4avchiquilitogomezpacheco"
         tools:targetApi="31">
         <activity
-            android:name=".VerClaves"
+            android:name=".EditarClaveActivity"
             android:exported="false" />
-        <!-- Declaración de la actividad de inicio -->
+        <activity
+            android:name=".VerClaves"
+            android:exported="false" /> <!-- Declaración de la actividad de inicio -->
         <activity
             android:name=".InicioActivity"
             android:exported="true">
@@ -25,7 +27,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity> <!-- Declaración de la actividad principal -->
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" />
     </application>
 
 </manifest>

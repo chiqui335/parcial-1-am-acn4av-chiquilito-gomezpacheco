@@ -43,11 +43,11 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     implementation("com.google.code.gson:gson:2.10.1")
 
-    // ✅ Firebase Bill of Materials (BoM)
-    // Usa la versión más reciente que desees (32.8.1 es una buena referencia)
+    // Firebase Bill of Materials (BoM)
+
     implementation(platform("com.google.firebase:firebase-bom:32.8.1"))
 
-    // ✅ Dependencias de Firebase - ya no necesitas especificar la versión aquí
+    // Dependencias de Firebase
     // La versión la manejará la BoM. Usamos las versiones -ktx para Kotlin.
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-firestore-ktx")
