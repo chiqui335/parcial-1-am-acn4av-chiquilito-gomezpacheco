@@ -105,18 +105,16 @@ public class InicioActivity extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser(); // Obtiene el usuario actual logueado
 
                             Toast.makeText(InicioActivity.this, "¡Bienvenido, " + user.getEmail() + "!",
-                                    Toast.LENGTH_LONG).show(); // Muestra un mensaje al usuario
+                                    Toast.LENGTH_LONG).show(); //
                             textViewMessage.setText("Inicio de sesión exitoso.");
-                            // Establece el color del texto a verde (puedes definir este color en colors.xml)
+
                             textViewMessage.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
 
-                            // Navegar a la MainActivity (o a la pantalla principal de tu generador de contraseñas)
+                            // Navegar a la MainActivity
                             Intent intent = new Intent(InicioActivity.this, MainActivity.class);
                             startActivity(intent);
-                            // Opcional: Finaliza esta actividad para que el usuario no pueda volver al login con el botón "atrás"
                             finish();
                         } else {
-                            // Si el inicio de sesión falla (credenciales incorrectas, sin conexión)
                             Log.w("Firebase", "signInWithEmail:failure", task.getException()); // Mensaje de error para Logcat
 
                             String errorMessage = "Error de autenticación.";
@@ -149,8 +147,6 @@ public class InicioActivity extends AppCompatActivity {
                                     Toast.LENGTH_LONG).show();
                             textViewMessage.setText("Cuenta creada exitosamente.");
                             textViewMessage.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
-
-                            // Opcional: redirigir al usuario o loguearlo automáticamente
 
                         } else {
                             // Si falla la creación de la cuenta

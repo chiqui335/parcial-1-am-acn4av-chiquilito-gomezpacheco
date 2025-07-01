@@ -11,10 +11,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.util.Log; // Necesario para Log.d y Log.e
 
-import androidx.annotation.NonNull; // Necesario para la anotación @NonNull
+import androidx.annotation.NonNull; //
 import androidx.appcompat.app.AppCompatActivity;
 
-// >>> INICIO DE IMPORTACIONES DE FIREBASE (ASEGÚRATE DE TENER ESTAS) <<<
+// >>> INICIO DE IMPORTACIONES DE FIREBASE <<<
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,7 +23,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 // >>> FIN DE IMPORTACIONES DE FIREBASE <<<
 
-// Importaciones necesarias para la lógica de la app (generación de contraseña, fecha)
+// Importaciones necesarias para la lógica
 import java.security.SecureRandom;
 import java.text.SimpleDateFormat; // Para formatear la fecha
 import java.util.Date;             // Para obtener la fecha actual
@@ -42,9 +42,8 @@ public class MainActivity extends AppCompatActivity {
     CheckBox checkEspeciales;
     SeekBar seekBarLongitud;
     TextView txtLongitud;
-    Button btnCerrarSesion; // Declaración de tu botón de cerrar sesión
+    Button btnCerrarSesion;
     private int longitudPassword = 12;
-    // private boolean usarCaracteresEspeciales = true; // Esta variable ya no es estrictamente necesaria si siempre lees del CheckBox
 
     // Declaraciones de Firebase
     private FirebaseAuth mAuth;
@@ -192,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
 
         String userId = currentUser.getUid();
 
-        // Guardar el objeto Clave directamente. Firestore lo mapeará si Clave es un POJO.
+        // Guardar el objeto Clave
         db.collection("usuarios")
                 .document(userId)
                 .collection("claves")
