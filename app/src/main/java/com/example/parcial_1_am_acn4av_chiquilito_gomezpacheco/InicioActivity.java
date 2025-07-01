@@ -21,8 +21,6 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class InicioActivity extends AppCompatActivity {
 
-    //
-    //
     // Declarar variables para los elementos de UI (EditTexts, Button, TextView)
     private EditText editTextEmail;
     private EditText editTextPassword;

@@ -9,27 +9,30 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.util.Log; // Necesario para Log.d y Log.e
 
+import androidx.annotation.NonNull; // Necesario para la anotación @NonNull
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+// >>> INICIO DE IMPORTACIONES DE FIREBASE (ASEGÚRATE DE TENER ESTAS) <<<
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+// >>> FIN DE IMPORTACIONES DE FIREBASE <<<
+
+// Importaciones necesarias para la lógica de la app (generación de contraseña, fecha)
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.List;
+import java.text.SimpleDateFormat; // Para formatear la fecha
+import java.util.Date;             // Para obtener la fecha actual
+import java.util.HashMap;          // Necesario para Map
+import java.util.Locale;           // Para SimpleDateFormat
+import java.util.Map;              // Necesario para Map
 
-import java.lang.reflect.Type;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 public class MainActivity extends AppCompatActivity {
-
-
     Button btnGuardar;
     EditText etNombreClave;
     TextView txtPassword;
@@ -39,21 +42,28 @@ public class MainActivity extends AppCompatActivity {
     CheckBox checkEspeciales;
     SeekBar seekBarLongitud;
     TextView txtLongitud;
+    Button btnCerrarSesion; // Declaración de tu botón de cerrar sesión
     private int longitudPassword = 12;
-    private boolean usarCaracteresEspeciales = true; // Control de caracteres especiales
+    // private boolean usarCaracteresEspeciales = true; // Esta variable ya no es estrictamente necesaria si siempre lees del CheckBox
+
+    // Declaraciones de Firebase
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Iniciar los elementos del layout
+        // Inicialización de Firebase
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
+        // Iniciar los elementos del layout
         Button btnVerClaves = findViewById(R.id.btnVerClaves);
 
         btnGuardar = findViewById(R.id.btnGuardar);
         etNombreClave = findViewById(R.id.etNombreClave);
-
         txtPassword = findViewById(R.id.txtPassword);
         btnGenerar = findViewById(R.id.btnGenerar);
         btnCopiar = findViewById(R.id.btnCopiar);
@@ -62,12 +72,27 @@ public class MainActivity extends AppCompatActivity {
         seekBarLongitud = findViewById(R.id.seekBarLongitud);
         txtLongitud = findViewById(R.id.txtLongitud);
 
+        // Conexión y Listener de botón Cerrar Sesión
+        btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
+        if (btnCerrarSesion != null) {
+            btnCerrarSesion.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mAuth.signOut(); // Cierra la sesión de Firebase
+                    Toast.makeText(MainActivity.this, "Sesión cerrada.", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(MainActivity.this, InicioActivity.class);
+                    startActivity(intent);
+                    finish(); // Finalizar MainActivity
+                }
+            });
+        }
+
         // SeekBar
         seekBarLongitud.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 longitudPassword = 8 + progress; // Rango 8-20 (8 + 0 a 8 + 12)
-                txtLongitud.setText(longitudPassword + "caracteres");
+                txtLongitud.setText(longitudPassword + " caracteres");
             }
 
             @Override public void onStartTrackingTouch(SeekBar seekBar) {}
@@ -89,7 +114,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String password = txtPassword.getText().toString();
                 if (!password.isEmpty() && !password.equals("Aquí aparecerá la contraseña")) {
-                    // Copiar la contraseña al portapapeles
                     android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
                     android.content.ClipData clip = android.content.ClipData.newPlainText("Contraseña", password);
                     clipboard.setPrimaryClip(clip);
@@ -112,20 +136,22 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 if (nombre.isEmpty()) {
-                    nombre = "default";
+                    nombre = "Sin nombre";
                 }
 
-                String fecha = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new java.util.Date());
+                // Formatear la fecha
+                String fecha = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault()).format(new Date());
                 Clave nuevaClave = new Clave(nombre, password, fecha);
-                guardarClave(nuevaClave);
+
+                // Llamar al método de guardar en Firestore
+                guardarClaveEnFirestore(nuevaClave);
             }
         });
 
         btnCancelar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Cierra la actividad actual y regresa a la anterior
-                finish();
+                finish(); // Cierra la actividad actual
             }
         });
 
@@ -140,17 +166,12 @@ public class MainActivity extends AppCompatActivity {
 
     private String generarContrasenaSegura(int longitud) {
         String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        boolean usarCaracteresEspeciales = checkEspeciales.isChecked();
 
-        // Verificar si el CheckBox está marcado
-        CheckBox checkEspeciales = findViewById(R.id.checkEspeciales);
-        boolean usarCaracteresEspeciales = checkEspeciales.isChecked(); // obtener el estado del CheckBox
-
-        // Agregar caracteres especiales si está tildado
         if (usarCaracteresEspeciales) {
             chars += "!@#$%^&*";
         }
 
-        // Generación de la contraseña
         SecureRandom random = new SecureRandom();
         StringBuilder sb = new StringBuilder();
 
@@ -161,94 +182,34 @@ public class MainActivity extends AppCompatActivity {
         return sb.toString();
     }
 
-    private void guardarClave(Clave nuevaClave) {
-        String fileName = "claves.json";
-        File file = new File(getFilesDir(), fileName);
-        List<Clave> listaClaves = new ArrayList<>();
-
-        Gson gson = new Gson();
-
-        // Leer archivo existente
-        if (file.exists()) {
-            try {
-                FileInputStream fis = new FileInputStream(file);
-                InputStreamReader isr = new InputStreamReader(fis);
-                BufferedReader reader = new BufferedReader(isr);
-                StringBuilder sb = new StringBuilder();
-                String linea;
-                while ((linea = reader.readLine()) != null) {
-                    sb.append(linea);
-                }
-                reader.close();
-
-                Type tipoLista = new TypeToken<List<Clave>>() {}.getType();
-                listaClaves = gson.fromJson(sb.toString(), tipoLista);
-            } catch (IOException e) {
-                e.printStackTrace();
-                Toast.makeText(this, "Error al leer el archivo", Toast.LENGTH_SHORT).show();
-                return;
-            }
+    private void guardarClaveEnFirestore(Clave nuevaClave) {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            Toast.makeText(this, "Error: No hay usuario autenticado.", Toast.LENGTH_SHORT).show();
+            Log.e("Firestore", "No hay usuario autenticado al intentar guardar clave.");
+            return;
         }
 
-        // Agregar nueva clave
-        listaClaves.add(nuevaClave);
+        String userId = currentUser.getUid();
 
-        // Escribir archivo actualizado
-        try {
-            String jsonActualizado = gson.toJson(listaClaves);
-            FileOutputStream fos = new FileOutputStream(file);
-            fos.write(jsonActualizado.getBytes());
-            fos.close();
-
-            Toast.makeText(this, "Contraseña guardada con éxito", Toast.LENGTH_SHORT).show();
-            // Mostrar ruta si querés:
-            // Toast.makeText(this, "Guardado en: " + file.getAbsolutePath(), Toast.LENGTH_LONG).show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Error al guardar la contraseña", Toast.LENGTH_SHORT).show();
-        }
+        // Guardar el objeto Clave directamente. Firestore lo mapeará si Clave es un POJO.
+        db.collection("usuarios")
+                .document(userId)
+                .collection("claves")
+                .add(nuevaClave)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Toast.makeText(MainActivity.this, "Contraseña guardada en la nube con éxito", Toast.LENGTH_SHORT).show();
+                        Log.d("Firestore", "Documento añadido con ID: " + documentReference.getId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(MainActivity.this, "Error al guardar contraseña en la nube", Toast.LENGTH_SHORT).show();
+                        Log.e("Firestore", "Error al añadir documento", e);
+                    }
+                });
     }
-
-
-    private String leerClaves() {
-        File file = new File(getFilesDir(), "claves.json");
-
-        if (!file.exists()) {
-            return "";
-        }
-
-        try {
-            FileInputStream fis = new FileInputStream(file);
-            InputStreamReader isr = new InputStreamReader(fis);
-            BufferedReader reader = new BufferedReader(isr);
-            StringBuilder sb = new StringBuilder();
-            String linea;
-            while ((linea = reader.readLine()) != null) {
-                sb.append(linea);
-            }
-            reader.close();
-
-            Gson gson = new Gson();
-            Type tipoLista = new TypeToken<List<Clave>>() {}.getType();
-            List<Clave> listaClaves = gson.fromJson(sb.toString(), tipoLista);
-
-            StringBuilder resultado = new StringBuilder();
-            for (Clave c : listaClaves) {
-                resultado.append("🔐 Nombre: ").append(c.nombre)
-                        .append("\n🔑 Clave: ").append(c.clave)
-                        .append("\n📅 Fecha: ").append(c.fecha)
-                        .append("\n\n");
-            }
-            return resultado.toString();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "Error al leer el archivo.";
-        }
-    }
-
-
-
-
-
 }

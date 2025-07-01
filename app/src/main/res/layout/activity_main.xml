@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:background="#0C476E">
 
-    <!-- Logo -->
     <ImageView
         android:id="@+id/imgLogo"
         android:layout_width="85dp"
@@ -17,8 +16,6 @@
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- TextView para la contraseña -->
 
     <TextView
         android:id="@+id/txtPassword"
@@ -34,7 +31,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imgLogo" />
-
 
     <LinearLayout
         android:id="@+id/longitudContainer"
@@ -58,7 +54,8 @@
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
             android:backgroundTint="@android:color/darker_gray"
-
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/darker_gray"
             />
 
 
@@ -90,7 +87,6 @@
             android:textSize="15sp"/>
     </LinearLayout>
 
-    <!-- Check para caracteres especiales -->
     <CheckBox
         android:id="@+id/checkEspeciales"
         android:layout_width="wrap_content"
@@ -104,7 +100,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="20dp"/>
 
-    <!-- Botón GENERAR -->
     <Button
         android:id="@+id/btnGenerar"
         android:layout_width="wrap_content"
@@ -118,7 +113,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="20dp"/>
 
-    <!-- Contenedor para COPIAR y CANCELAR -->
     <LinearLayout
         android:id="@+id/ButtonsMain"
         android:layout_width="wrap_content"
@@ -152,8 +146,7 @@
         <Button
             android:id="@+id/btnCancelar"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="CANCELAR"
+            android:layout_height="wrap_content"  android:text="CANCELAR"
             android:backgroundTint="#C4253A"
             android:textColor="#FFFFFF"/>
     </LinearLayout>
@@ -177,10 +170,16 @@
             android:textStyle="bold"
             android:textColor="#0a3f60"
             android:backgroundTint="#ffb84d"
-            android:layout_marginTop="4dp" />
-
-
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="16dp" /> <Button
+        android:id="@+id/btnCerrarSesion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CERRAR SESIÓN"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:backgroundTint="#C4253A"
+        android:layout_marginTop="4dp" />
     </LinearLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
