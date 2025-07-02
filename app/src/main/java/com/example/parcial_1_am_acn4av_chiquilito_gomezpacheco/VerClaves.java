@@ -1,172 +1,108 @@
 package com.example.parcial_1_am_acn4av_chiquilito_gomezpacheco;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
+import android.view.View;
+import android.widget.Button; // <-- Importar Button
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import android.util.Log;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class VerClaves extends AppCompatActivity {
 
-    LinearLayout layoutClavesContainer;
+    TextView txtListadoClaves;
+    Button btnVolver; // <-- Declarar el botón aquí
+
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ver_claves);
+        setContentView(R.layout.activity_ver_claves); // Asumiendo que este es el layout con el logo, el TextView y el botón "Volver"
 
-        layoutClavesContainer = findViewById(R.id.layoutClavesContainer);
+        txtListadoClaves = findViewById(R.id.txtListadoClaves);
+        btnVolver = findViewById(R.id.btnVolver); // <-- Enlazar el botón aquí
+
+        // Inicialización de Firebase
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
+        // Cargar y mostrar las claves desde Firestore
         cargarClavesDesdeFirestore();
 
-        Button btnVolverAtras = findViewById(R.id.btnVolverAtras);
-        btnVolverAtras.setOnClickListener(v -> {
-            finish(); // Vuelve a MainActivity
+        // >>> Lógica para el botón "Volver" <<<
+        btnVolver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish(); // Esto cierra la Activity actual y regresa a la anterior
+            }
         });
-
     }
 
     private void cargarClavesDesdeFirestore() {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
+            txtListadoClaves.setText("No hay usuario autenticado.");
             Toast.makeText(this, "Inicia sesión para ver tus claves.", Toast.LENGTH_LONG).show();
+            Log.e("VerClaves", "No hay usuario autenticado para cargar claves.");
             return;
         }
 
         String userId = currentUser.getUid();
+        Log.d("VerClaves", "Cargando claves para el usuario: " + userId);
+
         db.collection("usuarios")
                 .document(userId)
                 .collection("claves")
                 .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        layoutClavesContainer.removeAllViews(); // Limpiar
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            List<Clave> listaClaves = new ArrayList<>();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                try {
+                                    Clave clave = document.toObject(Clave.class);
+                                    listaClaves.add(clave);
+                                    Log.d("VerClaves", document.getId() + " => " + document.getData());
+                                } catch (Exception e) {
+                                    Log.e("VerClaves", "Error mapeando documento a Clave: " + document.getId(), e);
+                                    Toast.makeText(VerClaves.this, "Error procesando una clave.", Toast.LENGTH_SHORT).show();
+                                }
+                            }
 
-                        List<Clave> listaClaves = new ArrayList<>();
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            Clave clave = document.toObject(Clave.class);
-
-                            String documentId = document.getId(); // Guarda el ID
-
-                            listaClaves.add(clave);
-
-                            // Mostrar la clave
-                            TextView txt = new TextView(this);
-                            txt.setText("🔐 Nombre: " + clave.getNombre()
-                                    + "\n🔑 Clave: " + clave.getClave()
-                                    + "\n📅 Fecha: " + clave.getFecha());
-                            txt.setTextColor(Color.WHITE);
-                            txt.setTextSize(16);
-                            txt.setPadding(0, 0, 0, 8);
-
-                            // Layout de botones
-                            LinearLayout btnLayout = new LinearLayout(this);
-                            btnLayout.setOrientation(LinearLayout.HORIZONTAL);
-                            btnLayout.setWeightSum(3);
-
-                            // Botón COPIAR
-                            Button btnCopiar = new Button(this);
-                            btnCopiar.setText("Copiar");
-                            btnCopiar.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
-                            btnCopiar.setOnClickListener(v -> {
-                                ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                                ClipData clip = ClipData.newPlainText("clave", clave.getClave());
-                                clipboard.setPrimaryClip(clip);
-                                Toast.makeText(this, "Clave copiada", Toast.LENGTH_SHORT).show();
-                            });
-
-                            // Botón EDITAR (a implementar)
-                            Button btnEditar = new Button(this);
-                            btnEditar.setText("Editar");
-                            btnEditar.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
-                            btnEditar.setOnClickListener(v -> {
-                                Intent intent = new Intent(this, EditarClaveActivity.class);
-                                intent.putExtra("documentId", documentId);
-                                intent.putExtra("nombre", clave.getNombre());
-                                intent.putExtra("clave", clave.getClave());
-                                startActivity(intent);
-                            });
-
-
-                            // Botón BORRAR
-                            Button btnBorrar = new Button(this);
-                            btnBorrar.setText("Borrar");
-                            btnBorrar.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
-                            btnBorrar.setOnClickListener(v -> borrarClave(documentId));
-
-
-                            // Agregar botones al layout
-                            btnLayout.addView(btnCopiar);
-                            btnLayout.addView(btnEditar);
-                            btnLayout.addView(btnBorrar);
-
-                            btnBorrar.setOnClickListener(v -> borrarClave(documentId));
-
-                            // Agregar texto + botones al contenedor principal
-                            layoutClavesContainer.addView(txt);
-                            layoutClavesContainer.addView(btnLayout);
+                            if (listaClaves.isEmpty()) {
+                                txtListadoClaves.setText("No hay claves guardadas para este usuario.");
+                            } else {
+                                StringBuilder resultado = new StringBuilder();
+                                for (Clave c : listaClaves) {
+                                    resultado.append("🔐 Nombre: ").append(c.getNombre())
+                                            .append("\n🔑 Clave: ").append(c.getClave())
+                                            .append("\n📅 Fecha: ").append(c.getFecha())
+                                            .append("\n\n");
+                                }
+                                txtListadoClaves.setText(resultado.toString());
+                            }
+                        } else {
+                            Toast.makeText(VerClaves.this, "Error al cargar claves: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                            Log.w("VerClaves", "Error al obtener documentos: ", task.getException());
+                            txtListadoClaves.setText("Error al cargar las claves.");
                         }
-
-                        if (listaClaves.isEmpty()) {
-                            TextView txtVacio = new TextView(this);
-                            txtVacio.setText("No hay claves guardadas.");
-                            txtVacio.setTextColor(Color.WHITE);
-                            txtVacio.setTextSize(16);
-                            layoutClavesContainer.addView(txtVacio);
-                        }
-
-                    } else {
-                        Toast.makeText(this, "Error al cargar claves.", Toast.LENGTH_LONG).show();
                     }
                 });
     }
 
-    private void borrarClave(String documentoId) {
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser == null) {
-            Toast.makeText(this, "Usuario no autenticado", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        String userId = currentUser.getUid();
-        db.collection("usuarios")
-                .document(userId)
-                .collection("claves")
-                .document(documentoId)
-                .delete()
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(this, "Clave eliminada correctamente", Toast.LENGTH_SHORT).show();
-                    cargarClavesDesdeFirestore(); // recargar la lista
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Error al borrar la clave: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
-    }
 }

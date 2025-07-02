@@ -15,7 +15,7 @@ public class Clave {
         this.fecha = fecha;
     }
 
-    // 2. Métodos Getter públicos
+    // Métodos Getter
     public String getNombre() {
         return nombre;
     }
@@ -28,7 +28,7 @@ public class Clave {
         return fecha;
     }
 
-    // 3. Métodos Setter públicos
+    // Métodos Setter
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }

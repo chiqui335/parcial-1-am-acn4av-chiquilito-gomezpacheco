@@ -38,13 +38,13 @@ public class InicioActivity extends AppCompatActivity {
         // Inicializar la instancia de FirebaseAuth
         mAuth = FirebaseAuth.getInstance();
 
-        // Conectar las variables declaradas con los elementos del layout
+        // Conectar las variables declaradas
         editTextEmail = findViewById(R.id.editTextEmail);
         editTextPassword = findViewById(R.id.editTextPassword);
         btnIngresar = findViewById(R.id.btnIngresar);
         textViewMessage = findViewById(R.id.textViewMessage);
 
-        // Ahora cuando se hace clic, intenta loguear al usuario
+        // intenta loguear al usuario
         btnIngresar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -133,7 +133,7 @@ public class InicioActivity extends AppCompatActivity {
                 });
     }
 
-    // Opcional: Método para crear una nueva cuenta (si necesitas un flujo de registro aquí mismo)
+    // Opcional: Método para crear una nueva cuenta
     private void createAccount(String email, String password) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {

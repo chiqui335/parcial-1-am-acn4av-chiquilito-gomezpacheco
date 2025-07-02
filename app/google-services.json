@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "263408427793",
+    "project_id": "safekey-f6939",
+    "storage_bucket": "safekey-f6939.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:263408427793:android:54cb60d3168de1dfffa2b0",
+        "android_client_info": {
+          "package_name": "com.example.parcial_1_am_acn4av_chiquilito_gomezpacheco"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwt6MlYFFvqYU8cLR90axt5vfAIapjj1I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

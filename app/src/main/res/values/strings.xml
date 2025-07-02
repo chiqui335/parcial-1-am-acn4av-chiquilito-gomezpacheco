@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">parcial-1-am-acn4av-chiquilito-gomezpacheco</string>
+    <string name="logo_app">Logo de la aplicación</string>
+    <string name="safekey_name">SafeKey</string>
+    <string name="email_hint">Ingresá tu correo electrónico</string>
+    <string name="password_hint">Ingresá tu contraseña</string>
+    <string name="login_button">INGRESAR</string>
+    <string name="minilogo_app">Logo de la aplicación</string>
+    <string name="back_button">back_button</string>
+    <string name="Atrás">Atrás</string>
 </resources>

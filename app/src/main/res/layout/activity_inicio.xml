@@ -4,17 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/inicio"
-    tools:context=".InicioActivity"> <ImageView
-    android:id="@+id/imgLogo"
-    android:layout_width="349dp"
-    android:layout_height="340dp"
-    android:layout_marginTop="100dp"
-    android:src="@drawable/logo"
-    android:contentDescription="Logo de la aplicación" app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.497"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
+    android:background="@drawable/fondo_gradiente"
+    tools:context=".InicioActivity">
+
+    <ImageView
+        android:id="@+id/imgLogo"
+        android:layout_width="239dp"
+        android:layout_height="240dp"
+        android:layout_marginTop="100dp"
+        android:src="@drawable/logo"
+        android:contentDescription="@string/logo_app"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -31,35 +34,33 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-medium"
-            android:shadowColor="#80000000"
-            android:shadowDx="2"
-            android:shadowDy="2"
-            android:shadowRadius="4"
-            android:text="SafeKey"
-            android:textColor="#ffb84d"
+            android:shadowColor="#80000000"  android:shadowDx="3"            android:shadowDy="3"            android:shadowRadius="6"        android:text="@string/safekey_name"
+            android:textColor="@color/yellow"
             android:textSize="40sp"
-            android:textStyle="bold" />
+            android:letterSpacing="0.03" />
+
 
         <EditText
             android:id="@+id/editTextEmail"
-            android:layout_width="300dp" android:layout_height="wrap_content"
-            android:hint="Correo Electrónico"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/email_hint"
             android:inputType="textEmailAddress"
-            android:padding="12dp"
+            android:padding="10dp"
             android:layout_marginTop="24dp"
-            android:background="@android:color/white" android:textColor="@android:color/black"
-            android:textColorHint="#AAAAAA"/>
+            android:background="@drawable/edittext_underline"    android:textColor="@color/TextHint"
+            android:textColorHint="@color/TextHint"/>
 
         <EditText
             android:id="@+id/editTextPassword"
-            android:layout_width="300dp" android:layout_height="wrap_content"
-            android:hint="Contraseña"
-            android:inputType="textPassword"
-            android:padding="12dp"
-            android:layout_marginTop="16dp"
-            android:background="@android:color/white"
-            android:textColor="@android:color/black"
-            android:textColorHint="#AAAAAA"/>
+            android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/password_hint"
+        android:inputType="textPassword"
+        android:padding="10dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/edittext_underline"    android:textColor="@color/TextHint"
+        android:textColorHint="@color/TextHint"/>
 
         <TextView
             android:id="@+id/textViewMessage"
@@ -68,15 +69,16 @@
             android:textAlignment="center"
             android:textColor="@android:color/holo_red_dark"
             android:layout_marginTop="8dp"
-            android:visibility="gone" /> <Button
-        android:id="@+id/btnIngresar"
-        android:layout_width="127dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="60dp"
-        android:text="INGRESAR"
-        android:textStyle="bold"
-        android:textColor="#0a3f60"
-        android:backgroundTint="#ffb84d"/>
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btnIngresar"
+            android:layout_width="127dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="40dp"
+            android:text="@string/login_button"
+            android:textColor="@color/TextButton1"
+            android:backgroundTint="@color/yellow"/>
 
     </LinearLayout>
 

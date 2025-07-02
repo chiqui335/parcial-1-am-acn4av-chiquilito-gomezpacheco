@@ -10,7 +10,7 @@
         android:layout_width="85dp"
         android:layout_height="85dp"
         android:layout_marginTop="7dp"
-        android:contentDescription="Logo de la aplicación"
+        android:contentDescription="@string/minilogo_app"
         android:src="@drawable/logo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
@@ -26,7 +26,7 @@
         android:gravity="center"
         android:padding="10dp"
         android:text="Aquí aparecerá la contraseña"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/TextHint"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -53,17 +53,16 @@
             android:padding="10dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
-            android:backgroundTint="@android:color/darker_gray"
-            android:textColor="@android:color/white"
-            android:textColorHint="@android:color/darker_gray"
-            />
+            android:background="@drawable/edittext_underline"
+            android:textColor="@color/TextHint"
+            android:textColorHint="@color/TextHint" />
 
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Longitud de la contraseña:"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/TextHint"
             android:textSize="16sp"/>
 
         <SeekBar
@@ -83,7 +82,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="12 caracteres"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/TextHint"
             android:textSize="15sp"/>
     </LinearLayout>
 
@@ -92,7 +91,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Incluir caracteres especiales"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/TextHint"
         android:buttonTint="#ffb84d"
         android:textSize="15sp"
         app:layout_constraintTop_toBottomOf="@id/longitudContainer"
@@ -106,7 +105,7 @@
         android:layout_height="wrap_content"
         android:text="GENERAR"
         android:textStyle="bold"
-        android:textColor="#0a3f60"
+        android:textColor="@color/TextButton1"
         android:backgroundTint="#ffb84d"
         app:layout_constraintTop_toBottomOf="@id/checkEspeciales"
         app:layout_constraintStart_toStartOf="parent"
@@ -131,7 +130,7 @@
             android:layout_height="wrap_content"
             android:text="COPIAR"
             android:backgroundTint="#358E2F"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/TextHint"
             android:layout_marginEnd="24dp"/>
 
         <Button
@@ -140,7 +139,7 @@
             android:layout_height="wrap_content"
             android:text="GUARDAR"
             android:backgroundTint="@android:color/holo_blue_light"
-            android:textColor="@android:color/white"
+            android:textColor="@color/TextHint"
             android:layout_marginEnd="24dp" />
 
         <Button
@@ -148,7 +147,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"  android:text="CANCELAR"
             android:backgroundTint="#C4253A"
-            android:textColor="#FFFFFF"/>
+            android:textColor="@color/TextHint"/>
     </LinearLayout>
 
     <LinearLayout
@@ -168,7 +167,7 @@
             android:layout_height="wrap_content"
             android:text="VER CONTRASEÑAS"
             android:textStyle="bold"
-            android:textColor="#0a3f60"
+            android:textColor="@color/TextButton1"
             android:backgroundTint="#ffb84d"
             android:layout_marginTop="4dp"
             android:layout_marginEnd="16dp" /> <Button
@@ -177,7 +176,7 @@
         android:layout_height="wrap_content"
         android:text="CERRAR SESIÓN"
         android:textStyle="bold"
-        android:textColor="@android:color/white"
+        android:textColor="@color/TextHint"
         android:backgroundTint="#C4253A"
         android:layout_marginTop="4dp" />
     </LinearLayout>

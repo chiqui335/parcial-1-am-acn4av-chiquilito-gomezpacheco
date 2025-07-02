@@ -9,9 +9,9 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.util.Log; // Necesario para Log.d y Log.e
+import android.util.Log;
 
-import androidx.annotation.NonNull; //
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 // >>> INICIO DE IMPORTACIONES DE FIREBASE <<<
@@ -25,11 +25,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 // Importaciones necesarias para la lógica
 import java.security.SecureRandom;
-import java.text.SimpleDateFormat; // Para formatear la fecha
-import java.util.Date;             // Para obtener la fecha actual
-import java.util.HashMap;          // Necesario para Map
-import java.util.Locale;           // Para SimpleDateFormat
-import java.util.Map;              // Necesario para Map
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -38,12 +38,12 @@ public class MainActivity extends AppCompatActivity {
     TextView txtPassword;
     Button btnGenerar;
     Button btnCopiar;
-    Button btnCancelar;
+    Button btnCancelar; // Este es el botón a modificar
     CheckBox checkEspeciales;
     SeekBar seekBarLongitud;
     TextView txtLongitud;
     Button btnCerrarSesion;
-    private int longitudPassword = 12;
+    private int longitudPassword = 12; // Valor inicial para el SeekBar/longitud
 
     // Declaraciones de Firebase
     private FirebaseAuth mAuth;
@@ -66,12 +66,12 @@ public class MainActivity extends AppCompatActivity {
         txtPassword = findViewById(R.id.txtPassword);
         btnGenerar = findViewById(R.id.btnGenerar);
         btnCopiar = findViewById(R.id.btnCopiar);
-        btnCancelar = findViewById(R.id.btnCancelar);
+        btnCancelar = findViewById(R.id.btnCancelar); // Enlazamos el botón
         checkEspeciales = findViewById(R.id.checkEspeciales);
         seekBarLongitud = findViewById(R.id.seekBarLongitud);
         txtLongitud = findViewById(R.id.txtLongitud);
 
-        // Conexión y Listener de botón Cerrar Sesión
+        // Conexión y Listener de botón Cerrar Sesion
         btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
         if (btnCerrarSesion != null) {
             btnCerrarSesion.setOnClickListener(new View.OnClickListener() {
@@ -147,10 +147,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // >>> botón CANCELAR <<<
         btnCancelar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish(); // Cierra la actividad actual
+                resetearCampos(); // Llamamos a nuestro nuevo método para limpiar
+                Toast.makeText(MainActivity.this, "Campos reseteados", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -161,6 +163,17 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        resetearCampos(); // Llama a este método al inicio para configurar los valores por defecto
+    }
+
+    // >>> MÉTODO PARA RESETEAR LOS CAMPOS <<<
+    private void resetearCampos() {
+        etNombreClave.setText(""); // Limpia el EditText del nombre de la clave
+        txtPassword.setText("Aquí aparecerá la contraseña"); // Restaura el texto por defecto de la contraseña
+        seekBarLongitud.setProgress(longitudPassword - 8); // Resetea el SeekBar a su posición inicial (12 caracteres)
+        txtLongitud.setText(longitudPassword + " caracteres"); // Actualiza el TextView de longitud
+        checkEspeciales.setChecked(false); // Desmarca el CheckBox de caracteres especiales
     }
 
 
@@ -202,6 +215,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onSuccess(DocumentReference documentReference) {
                         Toast.makeText(MainActivity.this, "Contraseña guardada en la nube con éxito", Toast.LENGTH_SHORT).show();
                         Log.d("Firestore", "Documento añadido con ID: " + documentReference.getId());
+                        resetearCampos(); // Opcional: Resetea los campos después de guardar exitosamente
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
